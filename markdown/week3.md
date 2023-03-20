@@ -178,7 +178,7 @@ $h_\theta \left( x \right)=P\left( y=1|x;\theta \right)$
 
 对于线性回归模型，我们定义的代价函数是所有模型误差的平方和。理论上来说，我们也可以对逻辑回归模型沿用这个定义，但是问题在于，当我们将 ${h_\theta}\left( x \right)=\frac{1}{1+{e^{-\theta^{T}x}}}$ 带入到这样定义了的代价函数中时，我们得到的代价函数将是一个非凸函数（**non-convexfunction**），如下左图所示。
 
-![](../../../../00%E7%A0%94%E7%A9%B6%E7%94%9F/MachineLearning/Coursera-ML-AndrewNg/markdown/assets/8b94e47b7630ac2b0bcb10d204513810.jpg)
+![](assets/8b94e47b7630ac2b0bcb10d204513810.jpg)
 
 这意味着我们的代价函数有许多局部最小值，这将影响梯度下降算法寻找全局最小值。我们希望我们的代价函数是一个凸函数，要做的就是另外找一个代价函数是凸函数的，使得我们的算法可以使用梯度下降找到全局最小值。
 
