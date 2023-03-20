@@ -1,5 +1,7 @@
 **斯坦福大学2014（吴恩达）机器学习教程中文笔记**
 
+1232
+
 课程地址：<https://www.coursera.org/course/ml>
 
 [**笔记在线阅读**](http://www.ai-start.com/ml2014)

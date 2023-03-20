@@ -11,7 +11,7 @@
 
 在分类问题中，你要预测的变量 $y$ 是离散的值，我们将学习一种叫做逻辑回归 (**Logistic Regression**) 的算法，这是目前最流行使用最广泛的一种学习算法。
 
-> 虽然名字叫做逻辑回归，但 logistic 实际上是一种分类算法，只是由于历史原因而被叫做逻辑回归
+> 虽然名字叫做逻辑回归，但 logistic regression实际上是一种分类算法，只是由于历史原因而被叫做逻辑回归
 
 在分类问题中，我们尝试预测的是结果是否属于某一个类（例如正确或错误）。分类问题的例子有：判断一封电子邮件是否是垃圾邮件；判断一次金融交易是否是欺诈；之前我们也谈到了肿瘤分类问题的例子，区别一个肿瘤是恶性的还是良性的。
 
@@ -52,9 +52,9 @@
 
 根据线性回归模型我们只能预测连续的值，然而对于分类问题，我们需要输出0或1，我们可以预测：
 
-当${h_\theta}\left( x \right)>=0.5$时，预测 $y=1$。
+当 ${h_\theta}\left( x \right)>=0.5$时，预测 $y=1$。
 
-当${h_\theta}\left( x \right)<0.5$时，预测 $y=0$ 。
+当 ${h_\theta}\left( x \right)<0.5$时，预测 $y=0$ 。
 
 对于上图所示的数据，这样的一个线性模型似乎能很好地完成分类任务。假使我们又观测到一个非常大尺寸的恶性肿瘤，将其作为实例加入到我们的训练集中来，这将使得我们获得一条新的直线（蓝色的线）。
 
@@ -62,12 +62,12 @@
 
 这时，再使用0.5作为阀值来预测肿瘤是良性还是恶性便不合适了。可以看出，线性回归模型，因为其预测的值可以超越[0,1]的范围，并不适合解决这样的问题。
 
-我们引入一个新的模型，逻辑回归，该模型的输出变量范围始终在0和1之间。
+**我们引入一个新的模型，逻辑回归，该模型的输出变量范围始终在0和1之间**。
 
-逻辑回归模型的假设是： $h_\theta \left( x \right)=g\left(\theta^{T}X \right)$，其中
+逻辑回归模型的假设是： $h_\theta \left( x \right)=g\left(\theta^{T}x \right)$，其中
 
-- $X$ 代表特征向量
-- $g$ 代表逻辑函数（**logistic function**)是一个常用的逻辑函数为**S**形函数（**Sigmoid function**）
+- $x$ 代表特征向量
+- $g$ 代表逻辑函数（**logistic function**)，SIGMOD是一个常用的逻辑函数，为**S**形函数（**Sigmoid function**）
 - $g\left( z \right)=\frac{1}{1+{{e}^{-z}}}$。
 
 
@@ -101,7 +101,7 @@ $h_\theta \left( x \right)=P\left( y=1|x;\theta \right)$
 
 参考视频: 6 - 3 - Decision Boundary (15 min).mkv
 
-现在讲下决策边界(**decision boundary**)的概念。这个概念能更好地帮助我们理解逻辑回归的假设函数在计算什么。
+现在讲下**决策边界(decision boundary)**的概念。这个概念能更好地帮助我们理解逻辑回归的假设函数在计算什么。
 
 ![](assets/6590923ac94130a979a8ca1d911b68a3.png)
 
@@ -125,11 +125,11 @@ $h_\theta \left( x \right)=P\left( y=1|x;\theta \right)$
 
 ![](assets/1679240769545.png)
 
-则当 $\theta^TX > 0$ 即当$-3+{x_1}+{x_2} \geq 0$，也就是${x_1}+{x_2} \geq 3$时，模型将预测 $y=1$。
+则当 $\theta^Tx > 0$ 即当$-3+{x_1}+{x_2} \geq 0$，也就是${x_1}+{x_2} \geq 3$时，模型将预测 $y=1$。
 
 我们可以绘制直线${x_1}+{x_2} = 3$，这条线便是我们模型的分界线，将预测为1的区域和预测为 0的区域分隔开。我们把这条线称为决策边界(decision boundary)。
 
-> 需要注意的是决策边界是假设函数的属性
+> 需要注意的是决策边界是假设函数的属性，即使不存在训练数据集，决策边界依旧存在
 
 ![](assets/f71fb6102e1ceb616314499a027336dc.jpg)
 
@@ -153,14 +153,36 @@ $h_\theta \left( x \right)=P\left( y=1|x;\theta \right)$
 
 ![](assets/f23eebddd70122ef05baa682f4d6bd0f.png)
 
-对于线性回归模型，我们定义的代价函数是所有模型误差的平方和。理论上来说，我们也可以对逻辑回归模型沿用这个定义，但是问题在于，当我们将${h_\theta}\left( x \right)=\frac{1}{1+{e^{-\theta^{T}x}}}$带入到这样定义了的代价函数中时，我们得到的代价函数将是一个非凸函数（**non-convexfunction**）。
+根据前面所学，线性回归的代价函数为：
 
-![](assets/8b94e47b7630ac2b0bcb10d204513810.jpg)
+​	$J\left( \theta  \right)=\frac{1}{2m}\sum\limits_{i=1}^{m}{{{\left( {h_\theta}\left({x}^{\left( i \right)} \right)-{y}^{\left( i \right)} \right)}^{2}}}$ 
 
-这意味着我们的代价函数有许多局部最小值，这将影响梯度下降算法寻找全局最小值。
+现在让我们把 $\frac{1}{2m}$ 中的 $\frac{1}{2}$ 给提取出来放到后面，变成下面这样
 
-线性回归的代价函数为：$J\left( \theta  \right)=\frac{1}{m}\sum\limits_{i=1}^{m}{\frac{1}{2}{{\left( {h_\theta}\left({x}^{\left( i \right)} \right)-{y}^{\left( i \right)} \right)}^{2}}}$ 。
-我们重新定义逻辑回归的代价函数为：$J\left( \theta  \right)=\frac{1}{m}\sum\limits_{i=1}^{m}{{Cost}\left( {h_\theta}\left( {x}^{\left( i \right)} \right),{y}^{\left( i \right)} \right)}$，其中
+​	$J\left( \theta  \right)=\frac{1}{m}\sum\limits_{i=1}^{m}{\frac{1}{2}{{\left( {h_\theta}\left({x}^{\left( i \right)} \right)-{y}^{\left( i \right)} \right)}^{2}}}$ 。
+我们重新定义逻辑回归的代价函数为：
+
+​	$J\left( \theta  \right)=\frac{1}{m}\sum\limits_{i=1}^{m}{{Cost}\left( {h_\theta}\left( {x}^{\left( i \right)} \right),{y}^{\left( i \right)} \right)}$，
+
+其中:
+
+​	${{Cost}\left( {h_\theta}\left( {x}^{\left( i \right)} \right),{y}^{\left( i \right)} \right)}= \frac{1}{2}(h_\theta(x^{(i)})-y^{(i)})^2$
+
+接下来我们把所有的 $i$ 都给去掉，成为这样
+
+​	${{Cost}\left( {h_\theta}\left( {x}^{} \right),{y} \right)}= \frac{1}{2}(h_\theta(x)-y)^2$
+
+**对这个代价函数的理解是这样的：它是在输出的真实值是 $y$ 而我们的预测值是 $h_\theta(x)$ 时学习算法要付出的代价。也就是误差**
+
+这个代价函数在线性回归里很好用，但是在逻辑回归中，这个 $J(\theta)$ 将会是关于 $\theta$ 的非凸函数。
+
+对于线性回归模型，我们定义的代价函数是所有模型误差的平方和。理论上来说，我们也可以对逻辑回归模型沿用这个定义，但是问题在于，当我们将 ${h_\theta}\left( x \right)=\frac{1}{1+{e^{-\theta^{T}x}}}$ 带入到这样定义了的代价函数中时，我们得到的代价函数将是一个非凸函数（**non-convexfunction**），如下左图所示。
+
+![](../../../../00%E7%A0%94%E7%A9%B6%E7%94%9F/MachineLearning/Coursera-ML-AndrewNg/markdown/assets/8b94e47b7630ac2b0bcb10d204513810.jpg)
+
+这意味着我们的代价函数有许多局部最小值，这将影响梯度下降算法寻找全局最小值。我们希望我们的代价函数是一个凸函数，要做的就是另外找一个代价函数是凸函数的，使得我们的算法可以使用梯度下降找到全局最小值。
+
+我们定义新的代价函数如下：
 
 ![](assets/54249cb51f0086fa6a805291bf2639f1.png)
 
@@ -168,14 +190,30 @@ ${h_\theta}\left( x \right)$与 $Cost\left( {h_\theta}\left( x \right),y \right)
 
 ![](assets/ffa56adcc217800d71afdc3e0df88378.jpg)
 
-这样构建的$Cost\left( {h_\theta}\left( x \right),y \right)$函数的特点是：当实际的  $y=1$ 且${h_\theta}\left( x \right)$也为 1 时误差为 0，当 $y=1$ 但${h_\theta}\left( x \right)$不为1时误差随着${h_\theta}\left( x \right)$变小而变大；当实际的 $y=0$ 且${h_\theta}\left( x \right)$也为 0 时代价为 0，当$y=0$ 但${h_\theta}\left( x \right)$不为 0时误差随着 ${h_\theta}\left( x \right)$的变大而变大。
-将构建的 $Cost\left( {h_\theta}\left( x \right),y \right)$简化如下： 
+这样构建的$Cost\left( {h_\theta}\left( x \right),y \right)$函数的特点是：
+
+- 当实际的  $y=1$ 且 ${h_\theta}\left( x \right)$ 也为 1 时，代价为 0。
+- 当实际的  $y=1$ 但 ${h_\theta}\left( x \right)$ 不为1时误差随着${h_\theta}\left( x \right)$变小而变大；
+- 当实际的  $y=0$ 且 ${h_\theta}\left( x \right)$ 也为 0 时，代价为 0
+- 当实际的  $y=0$ 但 ${h_\theta}\left( x \right)$ 不为 0时误差随着 ${h_\theta}\left( x \right)$的变大而变大。
+
+![1679292629717](assets/1679292629717.png)
+
+因为 $y$ 的取值只能为 0或1，为了合并上面式子的两种情况，将构建的 $Cost\left( {h_\theta}\left( x \right),y \right)$简化如下： 
+
 $Cost\left( {h_\theta}\left( x \right),y \right)=-y\times log\left( {h_\theta}\left( x \right) \right)-(1-y)\times log\left( 1-{h_\theta}\left( x \right) \right)$
+
 带入代价函数得到：
 $J\left( \theta  \right)=\frac{1}{m}\sum\limits_{i=1}^{m}{[-{{y}^{(i)}}\log \left( {h_\theta}\left( {{x}^{(i)}} \right) \right)-\left( 1-{{y}^{(i)}} \right)\log \left( 1-{h_\theta}\left( {{x}^{(i)}} \right) \right)]}$
 即：$J\left( \theta  \right)=-\frac{1}{m}\sum\limits_{i=1}^{m}{[{{y}^{(i)}}\log \left( {h_\theta}\left( {{x}^{(i)}} \right) \right)+\left( 1-{{y}^{(i)}} \right)\log \left( 1-{h_\theta}\left( {{x}^{(i)}} \right) \right)]}$
 
-**Python**代码实现：
+> 这个式子是从统计学中根据极大似然估计(likelihodd estimation)得来的，是为不同的模型快速寻找参数的一种方法，而且是凸的。因此这是大部分人用来拟合 logistic回归模型的代价函数
+
+接下来我们要做的就是最小化 $J(\theta)$ 来找到一组最合适的参数 $\theta$ ，然后根据 ${h_\theta}\left( x \right)=\frac{1}{1+{e^{-\theta^{T}x}}}$ 来预测新的样本
+
+![1679292913828](assets/1679292913828.png)
+
+Python代码实现：
 
 ```python
 import numpy as np
@@ -193,16 +231,17 @@ def cost(theta, X, y):
 在得到这样一个代价函数以后，我们便可以用梯度下降算法来求得能使代价函数最小的参数了。算法为：
 
 **Repeat** {
-$\theta_j := \theta_j - \alpha \frac{\partial}{\partial\theta_j} J(\theta)$
-(**simultaneously update all** )
+
+​	$\theta_j := \theta_j - \alpha \frac{\partial}{\partial\theta_j} J(\theta)$	
+	(**simultaneously update all** )
 }
 
 
 求导后得到：
 
 **Repeat** {
-$\theta_j := \theta_j - \alpha \frac{1}{m}\sum\limits_{i=1}^{m}{{\left( {h_\theta}\left( \mathop{x}^{\left( i \right)} \right)-\mathop{y}^{\left( i \right)} \right)}}\mathop{x}_{j}^{(i)}$ 
-**(simultaneously update all** )
+	$\theta_j := \theta_j - \alpha \frac{1}{m}\sum\limits_{i=1}^{m}{{\left( {h_\theta}\left( \mathop{x}^{\left( i \right)} \right)-\mathop{y}^{\left( i \right)} \right)}}\mathop{x}_{j}^{(i)}$ 
+	**(simultaneously update all** )
 }
 
 在这个视频中，我们定义了单训练样本的代价函数，凸性分析的内容是超出这门课的范围的，但是可以证明我们所选的代价值函数会给我们一个凸优化问题。代价函数$J(\theta)$会是一个凸函数，并且没有局部最优值。
@@ -263,12 +302,19 @@ initialTheta = zeros(2,1);
 这个式子可以合并成：
 
 $Cost\left( {h_\theta}\left( x \right),y \right)=-y\times log\left( {h_\theta}\left( x \right) \right)-(1-y)\times log\left( 1-{h_\theta}\left( x \right) \right)$
+
 即，逻辑回归的代价函数：
+
 $Cost\left( {h_\theta}\left( x \right),y \right)=-y\times log\left( {h_\theta}\left( x \right) \right)-(1-y)\times log\left( 1-{h_\theta}\left( x \right) \right)$
+
 $=-\frac{1}{m}\sum\limits_{i=1}^{m}{[{{y}^{(i)}}\log \left( {h_\theta}\left( {{x}^{(i)}} \right) \right)+\left( 1-{{y}^{(i)}} \right)\log \left( 1-{h_\theta}\left( {{x}^{(i)}} \right) \right)]}$
+
 根据这个代价函数，为了拟合出参数，该怎么做呢？我们要试图找尽量让$J\left( \theta  \right)$ 取得最小值的参数$\theta $。
+
 $\underset{\theta}{\min }J\left( \theta  \right)$ 
+
 所以我们想要尽量减小这一项，这将我们将得到某个参数$\theta $。
+
 如果我们给出一个新的样本，假如某个特征 $x$，我们可以用拟合训练样本的参数$\theta $，来输出对假设的预测。
 另外，我们假设的输出，实际上就是这个概率值：$p(y=1|x;\theta)$，就是关于 $x$以$\theta $为参数，$y=1$ 的概率，你可以认为我们的假设就是估计 $y=1$ 的概率，所以，接下来就是弄清楚如何最大限度地最小化代价函数$J\left( \theta  \right)$，作为一个关于$\theta $的函数，这样我们才能为训练集拟合出参数$\theta $。
 
@@ -335,7 +381,14 @@ ${h_\theta}\left( x \right)=\frac{1}{1+{{e}^{-{\theta^T}X}}}$
 假设我们已经完成了可以实现这两件事的代码，那么梯度下降所做的就是反复执行这些更新。
 另一种考虑梯度下降的思路是：我们需要写出代码来计算$J\left( \theta  \right)$ 和这些偏导数，然后把这些插入到梯度下降中，然后它就可以为我们最小化这个函数。
 对于梯度下降来说，我认为从技术上讲，你实际并不需要编写代码来计算代价函数$J\left( \theta  \right)$。你只需要编写代码来计算导数项，但是，如果你希望代码还要能够监控这些$J\left( \theta  \right)$ 的收敛性，那么我们就需要自己编写代码来计算代价函数$J(\theta)$和偏导数项$\frac{\partial }{\partial {\theta_j}}J\left( \theta  \right)$。所以，在写完能够计算这两者的代码之后，我们就可以使用梯度下降。
-然而梯度下降并不是我们可以使用的唯一算法，还有其他一些算法，更高级、更复杂。如果我们能用这些方法来计算代价函数$J\left( \theta  \right)$和偏导数项$\frac{\partial }{\partial {\theta_j}}J\left( \theta  \right)$两个项的话，那么这些算法就是为我们优化代价函数的不同方法，**共轭梯度法 BFGS** (**变尺度法**) 和**L-BFGS** (**限制变尺度法**) 就是其中一些更高级的优化算法，它们需要有一种方法来计算 $J\left( \theta  \right)$，以及需要一种方法计算导数项，然后使用比梯度下降更复杂的算法来最小化代价函数。这三种算法的具体细节超出了本门课程的范畴。实际上你最后通常会花费很多天，或几周时间研究这些算法，你可以专门学一门课来提高数值计算能力，不过让我来告诉你他们的一些特性：
+
+然而梯度下降并不是我们可以使用的唯一算法，还有其他一些算法，更高级、更复杂。如果我们能用这些方法来计算代价函数$J\left( \theta  \right)$和偏导数项$\frac{\partial }{\partial {\theta_j}}J\left( \theta  \right)$两个项的话，那么这些算法就是为我们优化代价函数的不同方法，
+
+- **共轭梯度法 BFGS** 
+- **变尺度法**
+- L-BFGS(**限制变尺度法**) 
+
+就是其中一些更高级的优化算法，它们需要有一种方法来计算 $J\left( \theta  \right)$，以及需要一种方法计算导数项，然后使用比梯度下降更复杂的算法来最小化代价函数。这三种算法的具体细节超出了本门课程的范畴。实际上你最后通常会花费很多天，或几周时间研究这些算法，你可以专门学一门课来提高数值计算能力，不过让我来告诉你他们的一些特性：
 
 这三种算法有许多优点：
 
@@ -412,6 +465,8 @@ initialTheta=zeros(2,1);
 
 第三个例子：如果你正在做有关天气的机器学习分类问题，那么你可能想要区分哪些天是晴天、多云、雨天、或者下雪天，对上述所有的例子，$y$ 可以取一个很小的数值，一个相对"谨慎"的数值，比如1 到3、1到4或者其它数值，以上说的都是多类分类问题，顺便一提的是，对于下标是0 1 2 3，还是 1 2 3 4 都不重要，我更喜欢将分类从 1 开始标而不是0，其实怎样标注都不会影响最后的结果。
 
+![1679295189344](assets/1679295189344.png)
+
 然而对于之前的一个，二元分类问题，我们的数据看起来可能是像这样：
 
 ![](assets/68f56679a2113c7857ab9dd2afebcba8.png)
@@ -420,7 +475,7 @@ initialTheta=zeros(2,1);
 
 ![](assets/54d7903564b4416305b26f6ff2e13c04.png)
 
-我用3种不同的符号来代表3个类别，问题就是给出3个类型的数据集，我们如何得到一个学习算法来进行分类呢？
+我用3种不同的符号来代表3个类别，问题就是给出包含3个类型的数据集，我们如何得到一个学习算法来进行分类呢？
 
 我们现在已经知道如何进行二元分类，可以使用逻辑回归，对于直线或许你也知道，可以将数据集一分为二为正类和负类。用一对多的分类思想，我们可以将其用在多类分类问题上。
 
@@ -436,13 +491,17 @@ initialTheta=zeros(2,1);
 
 这里的三角形是正样本，而圆形代表负样本。可以这样想，设置三角形的值为1，圆形的值为0，下面我们来训练一个标准的逻辑回归分类器，这样我们就得到一个正边界。
 
-为了能实现这样的转变，我们将多个类中的一个类标记为正向类（$y=1$），然后将其他所有类都标记为负向类，这个模型记作$h_\theta^{\left( 1 \right)}\left( x \right)$。接着，类似地第我们选择另一个类标记为正向类（$y=2$），再将其它类都标记为负向类，将这个模型记作 $h_\theta^{\left( 2 \right)}\left( x \right)$,依此类推。
-最后我们得到一系列的模型简记为： $h_\theta^{\left( i \right)}\left( x \right)=p\left( y=i|x;\theta  \right)$其中：$i=\left( 1,2,3....k \right)$ 
+为了能实现这样的转变，我们将多个类中的一个类标记为正向类（$y=1$），然后将其他所有类都标记为负向类，这个模型记作$h_\theta^{\left( 1 \right)}\left( x \right)$。接着，类似地第我们选择另一个类标记为正向类（$y=2$），再将其它类都标记为负向类，将这个模型记作 $h_\theta^{\left( 2 \right)}\left( x \right)$，依此类推。
 
+最后我们得到一系列的模型简记为： $h_\theta^{\left( i \right)}\left( x \right)=p\left( y=i|x;\theta  \right)$其中：$i=\left( 1,2,3....k \right)$ 
 
 最后，在我们需要做预测时，我们将所有的分类机都运行一遍，然后对每一个输入变量，都选择最高可能性的输出变量。
 
+![1679295354739](assets/1679295354739.png)
+
 总之，我们已经把要做的做完了，现在要做的就是训练这个逻辑回归分类器：$h_\theta^{\left( i \right)}\left( x \right)$， 其中 $i$ 对应每一个可能的 $y=i$，最后，为了做出预测，我们给出输入一个新的 $x$ 值，用这个做预测。我们要做的就是在我们三个分类器里面输入 $x$，然后我们选择一个让 $h_\theta^{\left( i \right)}\left( x \right)$ 最大的$ i$，即$\mathop{\max}\limits_i\,h_\theta^{\left( i \right)}\left( x \right)$。
+
+![1679295425076](assets/1679295425076.png)
 
 你现在知道了基本的挑选分类器的方法，选择出哪一个分类器是可信度最高效果最好的，那么就可认为得到一个正确的分类，无论$i$值是多少，我们都有最高的概率值，我们预测$y$就是那个值。这就是多类别分类问题，以及一对多的方法，通过这个小方法，你现在也可以将逻辑回归分类器用在多类分类的问题上。
 
@@ -463,38 +522,64 @@ initialTheta=zeros(2,1);
 
 ![](assets/72f84165fbf1753cd516e65d5e91c0d3.jpg)
 
-第一个模型是一个线性模型，欠拟合，不能很好地适应我们的训练集；第三个模型是一个四次方的模型，过于强调拟合原始数据，而丢失了算法的本质：预测新数据。我们可以看出，若给出一个新的值使之预测，它将表现的很差，是过拟合，虽然能非常好地适应我们的训练集但在新输入变量进行预测时可能会效果不好；而中间的模型似乎最合适。
+- 第一个模型是一个线性模型，欠拟合，不能很好地适应我们的训练集；
+- 第三个模型是一个四次方的模型，过于强调拟合原始数据，而丢失了算法的本质：**预测新数据**。我们可以看出，若给出一个新的值使之预测，它将表现的很差，将这种情况称之为**过拟合**，另一种说法叫做这个模型具有高方差。虽然能非常好地适应我们的训练集但在新输入变量进行预测时可能会效果不好。
 
 分类问题中也存在这样的问题：
 
-![](assets/be39b497588499d671942cc15026e4a2.jpg)
+![1679299964023](assets/1679299964023.png)
 
 就以多项式理解，$x$ 的次数越高，拟合的越好，但相应的预测的能力就可能变差。
 
 问题是，如果我们发现了过拟合问题，应该如何处理？
 
-1. 丢弃一些不能帮助我们正确预测的特征。可以是手工选择保留哪些特征，或者使用一些模型选择的算法来帮忙（例如**PCA**）
+1. 丢弃一些不能帮助我们正确预测的特征。可以是手工选择保留哪些特征，或者使用一些模型选择的算法来帮忙（例如**PCA**）。然而舍弃一些特征值也意味着舍弃了一些信息，可能这些信息对于预测是有用的。
+2. 正则化。 保留所有的特征，但是减少量级或者参数 $\theta_j$ 的大小（**magnitude**）。
 
-2. 正则化。 保留所有的特征，但是减少参数的大小（**magnitude**）。
+![1679300199800](assets/1679300199800.png)
 
 ### 7.2 代价函数
 
 参考视频: 7 - 2 - Cost Function (10 min).mkv
 
-上面的回归问题中如果我们的模型是：
+![1679300304643](assets/1679300660849.png)
+
+上面的回归问题中如果我们的模型是（对应上图右边图像）：
+
 ${h_\theta}\left( x \right)={\theta_{0}}+{\theta_{1}}{x_{1}}+{\theta_{2}}{x_{2}^2}+{\theta_{3}}{x_{3}^3}+{\theta_{4}}{x_{4}^4}$
+
 我们可以从之前的事例中看出，正是那些高次项导致了过拟合的产生，所以如果我们能让这些高次项的系数接近于0的话，我们就能很好的拟合了。
-所以我们要做的就是在一定程度上减小这些参数$\theta $ 的值，这就是正则化的基本方法。我们决定要减少${\theta_{3}}$和${\theta_{4}}$的大小，我们要做的便是修改代价函数，在其中${\theta_{3}}$和${\theta_{4}}$ 设置一点惩罚。这样做的话，我们在尝试最小化代价时也需要将这个惩罚纳入考虑中，并最终导致选择较小一些的${\theta_{3}}$和${\theta_{4}}$。
-修改后的代价函数如下：$\underset{\theta }{\mathop{\min }}\,\frac{1}{2m}[\sum\limits_{i=1}^{m}{{{\left( {{h}_{\theta }}\left( {{x}^{(i)}} \right)-{{y}^{(i)}} \right)}^{2}}+1000\theta _{3}^{2}+10000\theta _{4}^{2}]}$
 
-通过这样的代价函数选择出的${\theta_{3}}$和${\theta_{4}}$ 对预测结果的影响就比之前要小许多。假如我们有非常多的特征，我们并不知道其中哪些特征我们要惩罚，我们将对所有的特征进行惩罚，并且让代价函数最优化的软件来选择这些惩罚的程度。这样的结果是得到了一个较为简单的能防止过拟合问题的假设：$J\left( \theta  \right)=\frac{1}{2m}[\sum\limits_{i=1}^{m}{{{({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})}^{2}}+\lambda \sum\limits_{j=1}^{n}{\theta_{j}^{2}}]}$
+所以我们要做的就是在一定程度上减小这些参数$\theta $ 的值，这就是正则化的基本方法。
 
-其中$\lambda $又称为正则化参数（**Regularization Parameter**）。 注：根据惯例，我们不对${\theta_{0}}$ 进行惩罚。经过正则化处理的模型与原模型的可能对比如下图所示：
+我们决定要减少${\theta_{3}}$和${\theta_{4}}$的大小，我们要做的便是修改代价函数，在其中${\theta_{3}}$和${\theta_{4}}$ 设置一点惩罚。在代价函数后面加上 $1000\theta_3^2 + 1000\theta_4^2$ ，这样做的话，我们在尝试最小化代价时也需要将这个惩罚纳入考虑中，并最终导致选择较小一些的${\theta_{3}}$和${\theta_{4}}$。修改后的代价函数如下：
+
+$\underset{\theta }{\mathop{\min }}\,\frac{1}{2m}[\sum\limits_{i=1}^{m}{{{\left( {{h}_{\theta }}\left( {{x}^{(i)}} \right)-{{y}^{(i)}} \right)}^{2}}+1000\theta _{3}^{2}+10000\theta _{4}^{2}]}$
+
+我们的目的是最小化代价函数 $J_\theta$ ，而加上惩罚后，为了使得代价函数最小，我们必须减小 $\theta_3$ 和 $\theta_4$ 的值。 通过这样的代价函数选择出的  ${\theta_{3}}$ 和 ${\theta_{4}}$ 对预测结果的影响就比之前要小许多。这就是正则化的思想。
+
+![1679300876069](assets/1679301014683.png)
+
+当我们减小参数的同时给我们带来的是更简单的假设函数和更不容易过拟合。例如上面的例子，关于预测房价有 100 个特征分别是 $x_1$ ~ $x_{100}$ ，这些特征可能是房子的大小、房子的层高、卧室的个数等等。同时也有 101 个参数与其对应，我们要做的就是选择其中高阶的参数对其进行惩罚，但我们并不知道这101个参数哪个是高阶的，该如何选择。那就对所有的都惩罚。
+
+假如我们有非常多的特征，我们并不知道其中哪些特征我们要惩罚，我们将对所有的特征进行惩罚，并且让代价函数最优化的软件来选择这些惩罚的程度。这样的结果是得到了一个较为简单的能防止过拟合问题的假设：
+
+$J\left( \theta  \right)=\frac{1}{2m}[\sum\limits_{i=1}^{m}{{{({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})}^{2}}+\lambda \sum\limits_{j=1}^{n}{\theta_{j}^{2}}]}$
+
+>  注意：根据惯例，我们不对${\theta_{0}}$ 进行惩罚。经过正则化处理的模型与原模型的可能对比如下图所示：
+
+其中$\lambda $又称为正则化参数（**Regularization Parameter**），其目的是控制两个不同目标之间的平衡关系。
+
+- 第一个目标与目标函数的第一项有关，是我们想更好地去拟合数据
+- 第二个目标与目标函数的第二项有关，是控制参数更小，与正则化目标有关
 
 ![](assets/ea76cc5394cf298f2414f230bcded0bd.jpg)
 
-如果选择的正则化参数$\lambda$ 过大，则会把所有的参数都最小化了，导致模型变成 ${h_\theta}\left( x \right)={\theta_{0}}$，也就是上图中红色直线所示的情况，造成欠拟合。
-那为什么增加的一项$\lambda =\sum\limits_{j=1}^{n}{\theta_j^{2}}$ 可以使$\theta $的值减小呢？
+如果选择的正则化参数$\lambda$ 过大，则会把所有的参数都最小化了，使得 $\theta_1、\theta_2...$ 都接近 $0$， 导致模型变成 ${h_\theta}\left( x \right)={\theta_{0}}$，在图像上是一条水平直线（如下图所示的直线），造成欠拟合。
+
+![1679302059595](assets/1679302059595.png)
+
+那为什么增加的一项$\lambda =\sum\limits_{j=1}^{n}{\theta_j^{2}}$ 可以使 $\theta $ 的值减小呢？
 因为如果我们令 $\lambda$ 的值很大的话，为了使**Cost Function** 尽可能的小，所有的 $\theta $ 的值（不包括${\theta_{0}}$）都会在一定程度上减小。
 但若$\lambda$ 的值太大了，那么$\theta $（不包括${\theta_{0}}$）都会趋近于0，这样我们所得到的只能是一条平行于$x$轴的直线。
 所以对于正则化，我们要取一个合理的 $\lambda$ 的值，这样才能更好的应用正则化。
@@ -505,30 +590,35 @@ ${h_\theta}\left( x \right)={\theta_{0}}+{\theta_{1}}{x_{1}}+{\theta_{2}}{x_{2}^
 
 参考视频: 7 - 3 - Regularized Linear Regression (11 min).mkv
 
-对于线性回归的求解，我们之前推导了两种学习算法：一种基于梯度下降，一种基于正规方程。
+对于线性回归的求解，我们之前推导了两种学习算法：
+
+- 梯度下降
+- 正规方程
 
 正则化线性回归的代价函数为：
 
 $J\left( \theta  \right)=\frac{1}{2m}\sum\limits_{i=1}^{m}{[({{({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})}^{2}}+\lambda \sum\limits_{j=1}^{n}{\theta _{j}^{2}})]}$
 
-如果我们要使用梯度下降法令这个代价函数最小化，因为我们未对$\theta_0​$进行正则化，所以梯度下降算法将分两种情形：
+如果我们要使用梯度下降法令这个代价函数最小化，因为我们未对$\theta_0$进行正则化，所以梯度下降算法将分两种情形（将 $\theta_0$ 提取出来）：
 
 $Repeat$  $until$  $convergence${
 
-​                                                   ${\theta_0}:={\theta_0}-a\frac{1}{m}\sum\limits_{i=1}^{m}{(({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{0}^{(i)}})$ 
+​                  ${\theta_0}:={\theta_0}-a\frac{1}{m}\sum\limits_{i=1}^{m}{(({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{0}^{(i)}})$                                                    	  				                      
 
-​                                                   ${\theta_j}:={\theta_j}-a[\frac{1}{m}\sum\limits_{i=1}^{m}{(({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{j}^{\left( i \right)}}+\frac{\lambda }{m}{\theta_j}]$ 
+​                  ${\theta_j}:={\theta_j}-a[\frac{1}{m}\sum\limits_{i=1}^{m}{(({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{j}^{\left( i \right)}}+\frac{\lambda }{m}{\theta_j}]$ 
 
-​                                                             $for$ $j=1,2,...n$
+​                                             	 $for$ $j=1,2,...n$
 
-​                                                   }
+}
 
-
-
+我们将 $\theta_j$ 的更新加上正则化项，不难看出上图的 $\theta_j$ 式子的后面一项其实就是 $J(\theta)$ 对 $\theta_j$ 求偏导后的结果。
 
 对上面的算法中$ j=1,2,...,n$ 时的更新式子进行调整可得：
 
-${\theta_j}:={\theta_j}(1-a\frac{\lambda }{m})-a\frac{1}{m}\sum\limits_{i=1}^{m}{({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{j}^{\left( i \right)}}​$ 
+${\theta_j}:={\theta_j}(1-a\frac{\lambda }{m})-a\frac{1}{m}\sum\limits_{i=1}^{m}{({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{j}^{\left( i \right)}}$ 
+
+> 通常 $\alpha$ 很小而 $m$ 很大，所以 $1-\alpha{\frac{\lambda}{m}}$ 是一个非常接近 1的数值，可以理解为 0.99 。而后面一项就是在我们没添加正则化项情况下的梯度下降
+
 可以看出，正则化线性回归的梯度下降算法的变化在于，每次都在原有算法更新规则的基础上令$\theta $值减少了一个额外的值。
 
 我们同样也可以利用正规方程来求解正则化线性回归模型，方法如下所示：
@@ -537,13 +627,15 @@ ${\theta_j}:={\theta_j}(1-a\frac{\lambda }{m})-a\frac{1}{m}\sum\limits_{i=1}^{m}
 
 图中的矩阵尺寸为 $(n+1)*(n+1)$。
 
+![1679303979662](assets/1679304000560.png)
+
 ### 7.4 正则化的逻辑回归模型
 
 参考视频: 7 - 4 - Regularized Logistic Regression (9 min).mkv
 
-针对逻辑回归问题，我们在之前的课程已经学习过两种优化算法：我们首先学习了使用梯度下降法来优化代价函数$J\left( \theta  \right)$，接下来学习了更高级的优化算法，这些高级优化算法需要你自己设计代价函数$J\left( \theta  \right)$。
+针对逻辑回归问题，我们在之前的课程已经学习过两种优化算法：我们首先学习了使用梯度下降法来优化代 价函数$J\left( \theta  \right)$，接下来学习了更高级的优化算法，这些高级优化算法需要你自己设计代价函数$J\left( \theta  \right)$。
 
-![](assets/2726da11c772fc58f0c85e40aaed14bd.png)
+![](assets/1679305002963.png)
 
 自己计算导数同样对于逻辑回归，我们也给代价函数增加一个正则化的表达式，得到代价函数：
 
@@ -568,19 +660,19 @@ def costReg(theta, X, y, learningRate):
 
 $Repeat$  $until$  $convergence${
 
-​                                                   ${\theta_0}:={\theta_0}-a\frac{1}{m}\sum\limits_{i=1}^{m}{(({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{0}^{(i)}})$
+​                                ${\theta_0}:={\theta_0}-a\frac{1}{m}\sum\limits_{i=1}^{m}{(({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{0}^{(i)}})$                                                  
 
-​                                                  ${\theta_j}:={\theta_j}-a[\frac{1}{m}\sum\limits_{i=1}^{m}{({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{j}^{\left( i \right)}}+\frac{\lambda }{m}{\theta_j}]$
+​				${\theta_j}:={\theta_j}-a[\frac{1}{m}\sum\limits_{i=1}^{m}{({h_\theta}({{x}^{(i)}})-{{y}^{(i)}})x_{j}^{\left( i \right)}}+\frac{\lambda }{m}{\theta_j}]$
 
-​                                                 $for$ $j=1,2,...n$
+​                                                 		$for$ $j=1,2,...n$
 
-​                                                 }
+ }
 
-注：看上去同线性回归一样，但是知道 ${h_\theta}\left( x \right)=g\left( {\theta^T}X \right)​$，所以与线性回归不同。
-**Octave** 中，我们依旧可以用 `fminuc` 函数来求解代价函数最小化的参数，值得注意的是参数${\theta_{0}}​$的更新规则与其他情况不同。
+注：看上去同线性回归一样，但是知道 ${h_\theta}\left( x \right)=g\left( {\theta^T}X \right)$，所以与线性回归不同。
+**Octave** 中，我们依旧可以用 `fminuc` 函数来求解代价函数最小化的参数，值得注意的是参数${\theta_{0}}$的更新规则与其他情况不同。
 注意：
 
-1. 虽然正则化的逻辑回归中的梯度下降和正则化的线性回归中的表达式看起来一样，但由于两者的${h_\theta}\left( x \right)​$不同所以还是有很大差别。
+1. 虽然正则化的逻辑回归中的梯度下降和正则化的线性回归中的表达式看起来一样，但由于两者的${h_\theta}\left( x \right)$不同所以还是有很大差别。
 
 2. ${\theta_{0}}$不参与其中的任何一个正则化。
 
